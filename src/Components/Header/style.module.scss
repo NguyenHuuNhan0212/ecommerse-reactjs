@@ -1,11 +1,14 @@
 @use '@styles/mixin.module.scss' as *;
 @use '@styles/variable.module.scss' as *;
+.container {
+  @include flex_box_custom(center, center, 0px);
+}
 .containerHeader {
   display: flex;
+  width: 1250px;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   height: 83px;
-  background-color: bisque;
 }
 .containerBoxIcon {
   @include flex_box_custom(center, center, 10px);
@@ -18,10 +21,16 @@
   @include flex_box_custom(center, center, 0px);
 }
 .containerMenu {
-  @include flex_box_custom(center, center, 20px);
+  @include flex_box_custom(center, center, 40px);
 }
 .containerBox {
   @include flex_box_custom(center, center, 20px);
+}
+.menu {
+  font-size: 15px;
+  padding-top: 9px;
+  cursor: pointer;
+  color: $primary_color;
 }
 .menu::after {
   content: '';
