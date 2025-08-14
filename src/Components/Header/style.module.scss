@@ -1,0 +1,40 @@
+@use '@styles/mixin.module.scss' as *;
+@use '@styles/variable.module.scss' as *;
+.containerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 83px;
+  background-color: bisque;
+}
+.containerBoxIcon {
+  @include flex_box_custom(center, center, 10px);
+}
+.boxIcon {
+  width: 26px;
+  height: 26px;
+  background-color: $primary_color;
+  @include radius_common(50%);
+  @include flex_box_custom(center, center, 0px);
+}
+.containerMenu {
+  @include flex_box_custom(center, center, 20px);
+}
+.containerBox {
+  @include flex_box_custom(center, center, 20px);
+}
+.menu::after {
+  content: '';
+  display: block;
+  height: 3px;
+  background-color: $primary_color;
+  opacity: 0;
+  margin-top: 6px;
+  transform-origin: right;
+  transform: scale(0);
+  transition: transform 300ms, opacity 500ms;
+}
+.menu:hover::after {
+  opacity: 1;
+  transform: scale(1);
+}
