@@ -6,6 +6,7 @@
   min-height: 750px;
   background-repeat: no-repeat;
   background-size: cover;
+  background-position: center;
 }
 .content {
   @include flex_box_custom(center, center, 10px);
