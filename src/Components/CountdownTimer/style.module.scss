@@ -1,4 +1,4 @@
-@import '@styles/variable.module.scss';
+@use '@styles/variable.module.scss' as *;
 
 .box {
   background-color: white;
