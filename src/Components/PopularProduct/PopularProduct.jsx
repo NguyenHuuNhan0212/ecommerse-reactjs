@@ -2,7 +2,6 @@ import MainLayout from '../Layout/Layout';
 import ProductItem from '../ProductItem/ProductItem';
 import styles from './style.module.scss';
 function PopularProduct({ data }) {
-  console.log(data);
   const { container } = styles;
   return (
     <>

@@ -16,8 +16,13 @@
     width: 460px;
     line-height: 25px;
   }
+  .containerDes {
+    @include flex_box_custom(center, center, 0px);
+    flex-direction: column;
+  }
   .boxBtn {
     @include flex_box_custom(center, center, 0px);
+    width: 172px;
     margin-top: 30px;
   }
   .boxImage {

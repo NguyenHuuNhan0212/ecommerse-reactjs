@@ -9,7 +9,13 @@ function Banner() {
         <div className={des}>
           Make yours celebrations even more special this year width beautiful.
         </div>
-        <Button content={'Go to shop'} />
+        <div
+          style={{
+            width: '172px'
+          }}
+        >
+          <Button content={'Go to shop'} />
+        </div>
       </div>
     </div>
   );

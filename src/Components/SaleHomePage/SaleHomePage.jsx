@@ -1,10 +1,10 @@
+import useTranslateXImage from '../../hooks/useTranslateXImage';
 import Button from '../Button/Button';
 import styles from './style.module.scss';
-import useTranslateX from './TranslateXImage';
 function SaleHomePage() {
-  const { container, title, des, boxBtn, boxImage } = styles;
+  const { container, title, des, boxBtn, boxImage, containerDes } = styles;
 
-  const { translateXPosition } = useTranslateX();
+  const { translateXPosition } = useTranslateXImage();
 
   return (
     <div className={container}>
@@ -20,7 +20,7 @@ function SaleHomePage() {
           alt=''
         />
       </div>
-      <div>
+      <div className={containerDes}>
         <h2 className={title}>Sale Of The Year</h2>
         <p className={des}>
           Libero sed faucibus facilisis fermentum. Est nibh sed massa sedales.
