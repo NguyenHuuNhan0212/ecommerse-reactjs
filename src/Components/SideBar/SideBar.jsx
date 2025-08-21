@@ -4,11 +4,28 @@ import { SideBarContext } from '../../contexts/SideBarProvider';
 import classNames from 'classnames';
 import { RiCloseFill } from 'react-icons/ri';
 import Login from '../ContentSideBar/Login/Login';
+import Compare from '../ContentSideBar/Compare/Compare';
+import WishList from '../ContentSideBar/WishList/WishList';
+import Cart from '../ContentSideBar/Cart/Cart';
 function SideBar() {
   const { container, overlay, sideBar, boxIcon, slideSideBar } = styles;
-  const { isOpen, setIsOpen } = useContext(SideBarContext);
+  const { isOpen, setIsOpen, type } = useContext(SideBarContext);
   const handleToggle = () => {
     setIsOpen(!isOpen);
+  };
+  const handleRenderContent = () => {
+    switch (type) {
+      case 'login':
+        return <Login />;
+      case 'compare':
+        return <Compare />;
+      case 'wishlist':
+        return <WishList />;
+      case 'cart':
+        return <Cart />;
+      default:
+        return <Login />;
+    }
   };
   return (
     <div className={container}>
@@ -28,7 +45,7 @@ function SideBar() {
             <RiCloseFill />
           </div>
         )}
-        <Login />
+        {handleRenderContent()}
       </div>
     </div>
   );

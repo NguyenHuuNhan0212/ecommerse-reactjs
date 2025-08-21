@@ -3,9 +3,9 @@ import { dataBoxIcon, dataMenu } from './constaints';
 import Menu from './Menu/Menu';
 import styles from './style.module.scss';
 import Logo from '@icons/images/Logo-retina.png';
-import reloadIcon from '@icons/svgs/reloadIcon.svg';
-import heartIcon from '@icons/svgs/heartIcon.svg';
-import cartIcon from '@icons/svgs/cartIcon.svg';
+import { TfiReload } from 'react-icons/tfi';
+import { CiHeart } from 'react-icons/ci';
+import { IoCartOutline } from 'react-icons/io5';
 import useScrollHandling from '../../hooks/useScrollHandling';
 import { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames';
@@ -22,7 +22,13 @@ function MyHeader() {
   } = styles;
   const { scrollPosition, scrollDirection } = useScrollHandling();
   const [fixedPosition, setFixedPosition] = useState(false);
-  const { isOpen, setIsOpen } = useContext(SideBarContext);
+  const { setIsOpen, setType } = useContext(SideBarContext);
+
+  const handleOpenSideBar = (type) => {
+    setType(type);
+    setIsOpen(true);
+  };
+
   useEffect(() => {
     setFixedPosition(scrollPosition > 80);
   }, [scrollPosition]);
@@ -61,19 +67,29 @@ function MyHeader() {
           <div className={containerMenu}>
             {dataMenu.slice(3, dataMenu.length).map((item, index) => {
               return (
-                <Menu
-                  key={index}
-                  content={item.content}
-                  href={item.href}
-                  setIsOpen={setIsOpen}
-                />
+                <Menu key={index} content={item.content} href={item.href} />
               );
             })}
           </div>
           <div className={containerBoxIcon}>
-            <img width={26} height={26} src={reloadIcon} alt='reloadIcon' />
-            <img width={26} height={26} src={heartIcon} alt='heartIcon' />
-            <img width={26} height={26} src={cartIcon} alt='cartIcon' />
+            <TfiReload
+              style={{
+                fontSize: '20px'
+              }}
+              onClick={() => handleOpenSideBar('compare')}
+            />
+            <CiHeart
+              style={{
+                fontSize: '20px'
+              }}
+              onClick={() => handleOpenSideBar('wishlist')}
+            />
+            <IoCartOutline
+              style={{
+                fontSize: '20px'
+              }}
+              onClick={() => handleOpenSideBar('cart')}
+            />
           </div>
         </div>
       </div>
