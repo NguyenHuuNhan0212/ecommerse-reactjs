@@ -51,6 +51,14 @@
   padding-top: 9px;
   cursor: pointer;
   color: $primary_color;
+  position: relative;
+  .subMenu {
+    position: absolute;
+    background-color: #fff;
+    width: 100%;
+    padding: 10px;
+    top: 40px;
+  }
 }
 .menu::after {
   content: '';

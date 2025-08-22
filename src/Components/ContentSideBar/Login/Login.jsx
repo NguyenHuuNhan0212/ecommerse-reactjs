@@ -7,11 +7,15 @@ import { useContext, useEffect, useState } from 'react';
 import { ToastContext } from '../../../contexts/ToastProvider';
 import { getInfo, register, signIn } from '../../../apis/authService';
 import Cookies from 'js-cookie';
+import { SideBarContext } from '../../../contexts/SideBarProvider';
+import { StoreContext } from '../../../contexts/storeProvider';
 function Login() {
   const { container, lostPassword, title, boxRememberMe } = styles;
   const [isRegister, setIsRegister] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useContext(ToastContext);
+  const { isOpen, setIsOpen } = useContext(SideBarContext);
+  const { setUserId } = useContext(StoreContext);
   const formik = useFormik({
     initialValues: {
       email: '',
@@ -34,28 +38,44 @@ function Login() {
       }
       const { email: username, password } = values;
       setIsLoading(true);
+
       if (isRegister) {
-        await register({ username, password })
-          .then((res) => {
-            toast.success(res.data.message);
-            setIsLoading(false);
-          })
-          .catch((err) => {
+        try {
+          const res = await register({ username, password });
+          // Assuming the API returns a success message
+          toast.success(res?.data?.message);
+        } catch (err) {
+          if (err.response && err.response.data && err.response.data.message) {
             toast.error(err.response.data.message);
-            setIsLoading(false);
-          });
-      }
-      if (!isRegister) {
-        await signIn({ username, password })
-          .then((res) => {
-            setIsLoading(false);
-            const { id, token, refreshToken } = res.data;
-            Cookies.set('token', token);
-            Cookies.set('refreshToken', refreshToken);
-          })
-          .catch((err) => {
-            setIsLoading(false);
-          });
+          } else {
+            toast.error('An error occurred during registration.');
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      } else {
+        // Handling sign in
+        try {
+          const res = await signIn({ username, password });
+          const { id, token, refreshToken } = res?.data;
+          setUserId(id);
+          Cookies.set('token', token);
+          Cookies.set('refreshToken', refreshToken);
+          Cookies.set('userId', id);
+          toast.success('Signed in successfully'); // CHANGED
+          setIsOpen(false);
+        } catch (err) {
+          console.error('Sign in failed:', err);
+
+          // Use the server's error message if available, otherwise use a generic one
+          if (err.response && err.response.data && err.response.data.message) {
+            toast.error(err.response.data.message);
+          } else {
+            toast.error('Sign in failed. Please try again.'); // CHANGED
+          }
+        } finally {
+          setIsLoading(false);
+        }
       }
     }
   });
@@ -63,9 +83,6 @@ function Login() {
     setIsRegister(!isRegister);
     formik.resetForm();
   };
-  useEffect(() => {
-    getInfo();
-  }, []);
   return (
     <div className={container}>
       <div className={title}>{isRegister ? 'SIGN UP' : 'SIGN IN'}</div>
