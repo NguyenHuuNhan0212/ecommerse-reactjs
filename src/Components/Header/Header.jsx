@@ -10,6 +10,7 @@ import useScrollHandling from '../../hooks/useScrollHandling';
 import { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { SideBarContext } from '../../contexts/SideBarProvider';
+import { useNavigate } from 'react-router-dom';
 function MyHeader() {
   const {
     container,
@@ -25,12 +26,14 @@ function MyHeader() {
   const { scrollPosition, scrollDirection } = useScrollHandling();
   const [fixedPosition, setFixedPosition] = useState(false);
   const { setIsOpen, setType, listProductCart } = useContext(SideBarContext);
-
+  const navigate = useNavigate();
   const handleOpenSideBar = (type) => {
     setType(type);
     setIsOpen(true);
   };
-
+  const handleHomePage = () => {
+    navigate('/');
+  };
   useEffect(() => {
     setFixedPosition(scrollPosition > 80);
   }, [scrollPosition]);
@@ -60,9 +63,11 @@ function MyHeader() {
             src={Logo}
             style={{
               width: '153px',
-              height: '53px'
+              height: '53px',
+              cursor: 'pointer'
             }}
             alt='Logo'
+            onClick={() => handleHomePage()}
           />
         </div>
         <div className={containerBox}>
