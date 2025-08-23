@@ -7,19 +7,26 @@ import { OurShopContext } from '@contexts/OurShopProvider';
 import SelectBox from './SelectBox';
 function Filter() {
   const { containerFilter, boxIcon, show, sort, boxLeft, selectBox } = styles;
-  const { showOptions, sortOptions } = useContext(OurShopContext);
-  const getValueSelect = (value) => {
-    console.log(value);
+  const { showOptions, sortOptions, setSortId, setShowId, setIsShowGrid } =
+    useContext(OurShopContext);
+  const getValueSelect = (value, type) => {
+    if (type === 'sort') {
+      setSortId(value);
+    } else {
+      setShowId(value);
+    }
+  };
+  const handleGetShowGrid = (type) => {
+    setIsShowGrid(type === 'grid');
   };
   return (
     <div className={containerFilter}>
       <div className={boxLeft}>
-        {/* <select className={classNames(selectBox, sort)}>
-          <option value=''>1</option>
-          <option value=''>2</option>
-          <option value=''>3</option>
-        </select> */}
-        <SelectBox options={sortOptions} getValue={getValueSelect} />
+        <SelectBox
+          options={sortOptions}
+          getValue={getValueSelect}
+          type={'sort'}
+        />
         <div className={boxIcon}>
           <GrGrid
             style={{
@@ -27,6 +34,7 @@ function Filter() {
               color: '#222',
               cursor: 'pointer'
             }}
+            onClick={() => handleGetShowGrid('grid')}
           />
           <div
             style={{
@@ -41,6 +49,7 @@ function Filter() {
               color: '#222',
               cursor: 'pointer'
             }}
+            onClick={() => handleGetShowGrid('list')}
           />
         </div>
       </div>
@@ -53,12 +62,11 @@ function Filter() {
         >
           Show
         </div>
-        {/* <select className={classNames(selectBox, show)}>
-          <option value=''>1</option>
-          <option value=''>2</option>
-          <option value=''>3</option>
-        </select> */}
-        <SelectBox options={showOptions} getValue={getValueSelect} />
+        <SelectBox
+          options={showOptions}
+          getValue={getValueSelect}
+          type={'show'}
+        />
       </div>
     </div>
   );

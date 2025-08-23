@@ -33,49 +33,40 @@ function Login() {
       )
     }),
     onSubmit: async (values) => {
-      if (isLoading) {
-        return;
-      }
+      if (isLoading) return;
+
       const { email: username, password } = values;
+
       setIsLoading(true);
 
       if (isRegister) {
-        try {
-          const res = await register({ username, password });
-          // Assuming the API returns a success message
-          toast.success(res?.data?.message);
-        } catch (err) {
-          if (err.response && err.response.data && err.response.data.message) {
-            toast.error(err.response.data.message);
-          } else {
-            toast.error('An error occurred during registration.');
-          }
-        } finally {
-          setIsLoading(false);
-        }
-      } else {
-        // Handling sign in
-        try {
-          const res = await signIn({ username, password });
-          const { id, token, refreshToken } = res?.data;
-          setUserId(id);
-          Cookies.set('token', token);
-          Cookies.set('refreshToken', refreshToken);
-          Cookies.set('userId', id);
-          toast.success('Signed in successfully'); // CHANGED
-          setIsOpen(false);
-        } catch (err) {
-          console.error('Sign in failed:', err);
+        await register({ username, password })
+          .then((res) => {
+            toast.success(res.data.message);
+            setIsLoading(false);
+          })
+          .catch((err) => {
+            toast.error('Register Failed');
+            setIsLoading(false);
+          });
+      }
 
-          // Use the server's error message if available, otherwise use a generic one
-          if (err.response && err.response.data && err.response.data.message) {
-            toast.error(err.response.data.message);
-          } else {
-            toast.error('Sign in failed. Please try again.'); // CHANGED
-          }
-        } finally {
-          setIsLoading(false);
-        }
+      if (!isRegister) {
+        await signIn({ username, password })
+          .then((res) => {
+            setIsLoading(false);
+            const { id, token, refreshToken } = res.data;
+            setUserId(id);
+            Cookies.set('token', token);
+            Cookies.set('refreshToken', refreshToken);
+            Cookies.set('userId', id);
+            toast.success('Sign in successfully!');
+            setIsOpen(false);
+          })
+          .catch((err) => {
+            setIsLoading(false);
+            toast.error('Sign in failed!');
+          });
       }
     }
   });

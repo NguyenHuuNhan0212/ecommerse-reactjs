@@ -66,3 +66,8 @@
     width: 83px;
   }
 }
+.containerProduct {
+  @include flex_box_custom(space-between, flex-start, 10px);
+  flex-wrap: wrap;
+  margin-top: 10px;
+}

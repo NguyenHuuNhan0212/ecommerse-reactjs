@@ -1,4 +1,5 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import { getProduct } from '../apis/productsService';
 
 export const OurShopContext = createContext();
 export const OurShopProvider = ({ children }) => {
@@ -33,10 +34,38 @@ export const OurShopProvider = ({ children }) => {
     { label: '12', value: '12' },
     { label: 'All', value: 'all' }
   ];
+  const [sortId, setSortId] = useState('0');
+  const [showId, setShowId] = useState('8');
+  const [isShowGrid, setIsShowGrid] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const values = {
     sortOptions,
-    showOptions
+    showOptions,
+    setSortId,
+    setShowId,
+    setIsShowGrid,
+    isShowGrid,
+    products,
+    isLoading
   };
+  useEffect(() => {
+    const query = {
+      sortType: sortId,
+      page: 1,
+      limit: showId
+    };
+    setIsLoading(true);
+    getProduct(query)
+      .then((res) => {
+        setProducts(res.contents);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }, [sortId, showId]);
   return (
     <OurShopContext.Provider value={values}>{children}</OurShopContext.Provider>
   );

@@ -57,3 +57,48 @@
   color: $thr_color;
   font-weight: 400;
 }
+.boxSize {
+  @include flex_box_custom(center, center, 10px);
+  .size {
+    @include flex_box_custom(center, center, 0px);
+    border: 1px solid #e1e1e1;
+    padding: 3px 6px;
+    font-size: 10px;
+    cursor: pointer;
+
+    &:hover {
+      border: 1px solid $primary_color;
+      transition: border 0.4s ease;
+    }
+  }
+}
+.isActiveSize {
+  border: 1px solid $primary_color !important;
+}
+.btnClear {
+  font-size: 12px;
+  text-align: center;
+  cursor: pointer;
+  margin-top: 10px;
+}
+.textCenter {
+  text-align: center;
+}
+.boxBtn {
+  margin: 10px auto;
+  width: 142px;
+}
+.containerItem {
+  @include flex_box_custom(flex-start, center, 20px);
+  margin-top: 10px;
+  .content {
+    @include flex_box_custom(flex-start, flex-start, 5px);
+    flex-direction: column;
+  }
+  .leftBtn {
+    margin: 0px;
+  }
+  .largImg {
+    width: 430px;
+  }
+}

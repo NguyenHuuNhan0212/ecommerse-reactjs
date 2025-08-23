@@ -5,6 +5,8 @@ import styles from './style.module.scss';
 import Banner from './components/Banner';
 import { OurShopProvider } from '@contexts/OurShopProvider';
 import Filter from './components/Filter';
+import ListProduct from './components/ListProduct';
+import MyFooter from '@components/Footer/Footer';
 function OurShop() {
   const { container, functionBox, specialText, btnBack } = styles;
   const navigate = useNavigate();
@@ -28,8 +30,10 @@ function OurShop() {
         <Banner />
         <div>
           <Filter />
+          <ListProduct />
         </div>
       </MainLayout>
+      <MyFooter />
     </OurShopProvider>
   );
 }

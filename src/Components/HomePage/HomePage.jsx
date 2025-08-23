@@ -11,7 +11,12 @@ import MyFooter from '../Footer/Footer';
 function HomePage() {
   const [listProducts, setListProducts] = useState([]);
   useEffect(() => {
-    getProduct().then((res) => {
+    const query = {
+      sortType: 0,
+      page: 1,
+      limit: 10
+    };
+    getProduct(query).then((res) => {
       setListProducts(res.contents);
     });
   }, []);
