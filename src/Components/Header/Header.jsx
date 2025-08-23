@@ -18,11 +18,13 @@ function MyHeader() {
     containerBox,
     containerHeader,
     fixedHeader,
-    topHeader
+    topHeader,
+    boxCart,
+    quantity
   } = styles;
   const { scrollPosition, scrollDirection } = useScrollHandling();
   const [fixedPosition, setFixedPosition] = useState(false);
-  const { setIsOpen, setType } = useContext(SideBarContext);
+  const { setIsOpen, setType, listProductCart } = useContext(SideBarContext);
 
   const handleOpenSideBar = (type) => {
     setType(type);
@@ -84,12 +86,16 @@ function MyHeader() {
               }}
               onClick={() => handleOpenSideBar('wishlist')}
             />
-            <IoCartOutline
-              style={{
-                fontSize: '20px'
-              }}
-              onClick={() => handleOpenSideBar('cart')}
-            />
+
+            <div className={boxCart}>
+              <IoCartOutline
+                style={{
+                  fontSize: '20px'
+                }}
+                onClick={() => handleOpenSideBar('cart')}
+              />
+              <div className={quantity}>{listProductCart.length}</div>
+            </div>
           </div>
         </div>
       </div>

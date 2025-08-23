@@ -4,12 +4,13 @@ import MainLayout from '../../../Components/Layout/Layout';
 import ProductItem from '../../../Components/ProductItem/ProductItem';
 import styles from '../style.module.scss';
 import Button from '@components/Button/Button';
-
+import LoadingTextCommon from '../../../Components/LoadingTextCommon/LoadingTextCommon';
 function ListProduct() {
-  const { products, isShowGrid, isLoading } = useContext(OurShopContext);
-  const { containerProduct } = styles;
+  const { isLoadMore, products, isShowGrid, isLoading, handleLoadMore, total } =
+    useContext(OurShopContext);
+  const { containerProduct, sectionListProduct } = styles;
   return (
-    <>
+    <div className={sectionListProduct}>
       <MainLayout>
         {isLoading ? (
           <>Loading...</>
@@ -30,18 +31,26 @@ function ListProduct() {
                 );
               })}
             </div>
-            <div
-              style={{
-                width: '180px',
-                margin: '50px auto 0px'
-              }}
-            >
-              <Button content={'LOAD MORE PRODUCTS'} isPrimary={false} />
-            </div>
+            {products.length < total && (
+              <div
+                style={{
+                  width: '180px',
+                  margin: '50px auto 0px'
+                }}
+              >
+                <Button
+                  content={
+                    isLoadMore ? <LoadingTextCommon /> : 'LOAD MORE PRODUCTS'
+                  }
+                  onClick={() => handleLoadMore()}
+                  isPrimary={false}
+                />
+              </div>
+            )}
           </>
         )}
       </MainLayout>
-    </>
+    </div>
   );
 }
 
