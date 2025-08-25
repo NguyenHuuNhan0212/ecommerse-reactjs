@@ -25,7 +25,7 @@ function ProductItem({
   const ourShopStore = useContext(OurShopContext);
   const [isShowGrid, setIsShowGrid] = useState(ourShopStore?.isShowGrid);
   const userId = Cookies.get('userId');
-  const { setIsOpen, setType, handleGetListProductsCart } =
+  const { setIsOpen, setType, setDetailProduct, handleGetListProductsCart } =
     useContext(SideBarContext);
   const { toast } = useContext(ToastContext);
   const [isLoading, setIsLoading] = useState(false);
@@ -85,6 +85,11 @@ function ProductItem({
         setIsLoading(false);
       });
   };
+  const handleShowDetailProductSideBar = () => {
+    setIsOpen(true);
+    setType('detail');
+    setDetailProduct(details);
+  };
   useEffect(() => {
     if (isHomePage) {
       setIsShowGrid(true);
@@ -111,7 +116,7 @@ function ProductItem({
           <div className={boxIcon}>
             <img src={reloadIcon} alt='' />
           </div>
-          <div className={boxIcon}>
+          <div className={boxIcon} onClick={handleShowDetailProductSideBar}>
             <img src={eyeIcon} alt='' />
           </div>
         </div>

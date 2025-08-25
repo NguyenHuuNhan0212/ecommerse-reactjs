@@ -12,6 +12,10 @@ const routes = [
   {
     path: '/shop',
     component: lazy(() => import('@pages/OurShop/OurShop.jsx'))
+  },
+  {
+    path: '/cart',
+    component: lazy(() => import('@pages/Cart/Cart.jsx'))
   }
 ];
 

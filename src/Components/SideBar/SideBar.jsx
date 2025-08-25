@@ -7,6 +7,7 @@ import Login from '../ContentSideBar/Login/Login';
 import Compare from '../ContentSideBar/Compare/Compare';
 import WishList from '../ContentSideBar/WishList/WishList';
 import Cart from '../ContentSideBar/Cart/Cart';
+import DetailProduct from '../ContentSideBar/DetailProduct/DetailProduct';
 function SideBar() {
   const { container, overlay, sideBar, boxIcon, slideSideBar } = styles;
   const { isOpen, setIsOpen, type } = useContext(SideBarContext);
@@ -23,6 +24,8 @@ function SideBar() {
         return <WishList />;
       case 'cart':
         return <Cart />;
+      case 'detail':
+        return <DetailProduct />;
       default:
         return <Login />;
     }
