@@ -18,11 +18,21 @@
     width: 350px;
     background-color: #fff;
     z-index: 1001;
-    height: 100vh;
+    height: 100%;
+    overflow-y: auto; // cho phép cuộn dọc
+    overflow-x: hidden; // tránh cuộn ngang
 
     transform: translateX(350px);
     transition: all 0.3s ease;
   }
+  .sideBar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sideBar::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
   .slideSideBar {
     transform: translateX(0);
   }
