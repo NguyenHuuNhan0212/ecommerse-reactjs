@@ -19,7 +19,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      img {
+      .imageReview {
         width: calc(100% / 2 - 10px);
         height: 350px;
         object-fit: cover;
@@ -52,6 +52,9 @@
           font-size: 12px;
           color: $thr_color;
           cursor: pointer;
+        }
+        .active {
+          border: 1px solid $thr_color;
         }
       }
       .titleSize {
@@ -141,4 +144,97 @@
       color: $thr_color;
     }
   }
+}
+.containerReview {
+  .reviews {
+    border-bottom: 1px solid #e1e1e1;
+    padding-bottom: 15px;
+  }
+  .noReview {
+    font-size: 14px;
+    color: $thr_color;
+    margin-bottom: 20px;
+  }
+  .replyForm {
+    padding-top: 30px;
+    .commentReplyTitle {
+      border-bottom: 1px solid #e1e1e1;
+      font-size: 14px;
+      margin-bottom: 14px;
+      padding-bottom: 14px;
+      color: $thr_color;
+    }
+    .commentNotes {
+      font-size: 14px;
+      color: $thr_color;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      .commentFormCookiesConsent {
+        display: flex;
+        gap: 5px;
+        align-items: flex-start;
+        input {
+          margin-top: 2px;
+        }
+        span {
+          color: $thr_color;
+        }
+      }
+      .btnSubmit {
+        width: 100%;
+        max-width: 110px;
+      }
+    }
+  }
+}
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  label {
+    font-size: 16px;
+    color: $thr_color;
+    span {
+      color: #c62828;
+    }
+  }
+  .boxItemStar {
+    display: flex;
+    gap: 25px;
+  }
+  textarea {
+    border: 1px solid #e1e1e1;
+    outline: none;
+    padding: 8px 15px;
+
+    &:focus {
+      border: 1px solid $secondary_color;
+    }
+  }
+  input {
+    border: 1px solid #e1e1e1;
+    padding: 8px 15px;
+    outline: none;
+    &:focus {
+      border: 1px solid $secondary_color;
+    }
+  }
+}
+.clear {
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 10px;
+  color: $thr_color;
+}
+.activeDisableBtn {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.activeDisableBtn:hover {
+  background-color: $primary_color;
+  color: $white_color;
 }

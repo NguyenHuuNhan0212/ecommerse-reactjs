@@ -19,7 +19,8 @@ function ProductItem({
   name,
   price,
   details,
-  isHomePage = true
+  isHomePage = true,
+  slideItem = false
 }) {
   // const { isShowGrid } = useContext(OurShopContext);
   const [sizeChoose, setSizeChoose] = useState('');
@@ -104,6 +105,11 @@ function ProductItem({
       setIsShowGrid(ourShopStore?.isShowGrid);
     }
   }, [isHomePage, ourShopStore?.isShowGrid]);
+  useEffect(() => {
+    if (slideItem) {
+      setIsShowGrid(true);
+    }
+  }, [slideItem]);
   return (
     <div
       className={isShowGrid ? '' : containerItem}
@@ -113,10 +119,14 @@ function ProductItem({
         className={classNames(boxImg, {
           [largImg]: !isShowGrid
         })}
-        onClick={() => handleNavigateToDetail()}
       >
-        <img src={src} alt='' />
-        <img src={prevSrc} alt='' className={showImgWhenHover} />
+        <img src={src} alt='' onClick={() => handleNavigateToDetail()} />
+        <img
+          src={prevSrc}
+          alt=''
+          className={showImgWhenHover}
+          onClick={() => handleNavigateToDetail()}
+        />
         <div className={showFncWhenHover}>
           <div className={boxIcon}>
             <img src={cartIcon} alt='' />
@@ -132,7 +142,12 @@ function ProductItem({
           </div>
         </div>
       </div>
-      <div className={isShowGrid ? '' : content}>
+      <div
+        className={isShowGrid ? '' : content}
+        style={{
+          marginTop: slideItem ? '10px' : '0'
+        }}
+      >
         {!isHomePage && (
           <div className={boxSize}>
             {details.size.map((item, index) => {

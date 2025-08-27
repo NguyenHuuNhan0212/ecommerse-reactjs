@@ -1,46 +1,57 @@
 import Button from '../../../Components/Button/Button';
-
+import FormItem from './FormItem';
+import styles from '../style.module.scss';
 function ReviewProduct() {
+  const {
+    containerReview,
+    reviews,
+    noReview,
+    commentNotes,
+    replyForm,
+    commentReplyTitle,
+    commentFormCookiesConsent,
+    btnSubmit
+  } = styles;
   return (
-    <div>
-      <div>REVIEWS</div>
+    <div className={containerReview}>
+      <div className={reviews}>REVIEWS</div>
 
-      <p>There are no reviews yet.</p>
+      <p className={noReview}>There are no reviews yet.</p>
 
-      <div>BE THE FIRST TO PREVIEW "10K YELLOW GOLD"</div>
+      <div className={replyForm}>
+        <div className={commentReplyTitle}>
+          BE THE FIRST TO PREVIEW "10K YELLOW GOLD"
+        </div>
 
-      <p>
-        Your email address will not be published. Required fields are marked.
-      </p>
-
-      <label>
-        Your rating <span>*</span>
-      </label>
-
-      <div>sao</div>
-
-      <label>
-        Your review <span>*</span>
-      </label>
-      <textarea rows='10'> </textarea>
-
-      <label htmlFor=''>
-        Name <span>*</span>
-      </label>
-      <input type='text' name='' id='' />
-
-      <label htmlFor=''>Email</label>
-      <input type='email' name='' id='' />
-
-      <div>
-        <input type='checkbox' name='' id='' />
-        <p>
-          Save my name, email, and website in this browser for the next tim I
-          comment.
+        <p className={commentNotes}>
+          Your email address will not be published. Required fields are marked.
         </p>
-      </div>
 
-      <Button content={'SUBMIT'} />
+        <form action=''>
+          <FormItem label={'Your rating'} isRequired typeChildren={'rating'} />
+
+          <FormItem
+            label={'Your review'}
+            isRequired
+            typeChildren={'textarea'}
+          />
+
+          <FormItem label={'Name'} isRequired typeChildren={'input'} />
+
+          <FormItem label={'Email'} isRequired typeChildren={'input'} />
+          <div className={commentFormCookiesConsent}>
+            <input type='checkbox' name='' id='' />
+            <span>
+              Save my name, email, and website in this browser for the next tim
+              I comment.
+            </span>
+          </div>
+
+          <div className={btnSubmit}>
+            <Button content={'SUBMIT'} />
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -8,12 +8,14 @@ import LoadingTextCommon from '../../../Components/LoadingTextCommon/LoadingText
 function ListProduct() {
   const { isLoadMore, products, isShowGrid, isLoading, handleLoadMore, total } =
     useContext(OurShopContext);
-  const { containerProduct, sectionListProduct } = styles;
+  const { containerProduct, sectionListProduct, loading } = styles;
   return (
     <div className={sectionListProduct}>
       <MainLayout>
         {isLoading ? (
-          <>Loading...</>
+          <div className={loading}>
+            <LoadingTextCommon />
+          </div>
         ) : (
           <>
             <div className={isShowGrid ? containerProduct : ''}>
