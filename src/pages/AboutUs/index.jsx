@@ -3,6 +3,7 @@ import MyFooter from '../../Components/Footer/Footer';
 import MainLayout from '../../Components/Layout/Layout';
 import styles from './style.module.scss';
 import Logos from './components/Logos';
+import { useNavigate } from 'react-router-dom';
 function AboutUs() {
   const {
     container,
@@ -35,6 +36,10 @@ function AboutUs() {
       des: 'Ac eget cras augue nisi neque lacinia in aliquam. Odio pellentesque sed ultrices dolor amet nunc habitasse proin consec. tur feugiat egestas eget.'
     }
   ];
+  const navigate = useNavigate();
+  const handleBackPreviousPage = () => {
+    navigate(-1);
+  };
   return (
     <>
       <MyHeader />

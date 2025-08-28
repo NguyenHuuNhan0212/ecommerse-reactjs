@@ -18,6 +18,9 @@ function Menu({ content, href }) {
     if (content === 'Our Shop') {
       navigate('/shop');
     }
+    if (content === 'About Us') {
+      navigate('/about-us');
+    }
   };
   const handleRenderText = (content) => {
     if (content === 'Sign In' && userInfo) {

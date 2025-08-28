@@ -14,8 +14,8 @@ function InputCustom({
       return <input type='text' placeholder={placeholder} {...register} />;
     } else {
       return (
-        <select {...register}>
-          <option value='' disabled selected hidden>
+        <select {...register} defaultValue=''>
+          <option value='' disabled hidden>
             {placeholder}
           </option>
           {dataOptions.map((item, index) => {
