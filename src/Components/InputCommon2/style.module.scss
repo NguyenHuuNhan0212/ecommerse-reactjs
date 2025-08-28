@@ -1,0 +1,27 @@
+@use '@styles/mixin.module.scss' as *;
+@use '@styles/variable.module.scss' as *;
+
+.container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  .labelClass {
+    font-size: 14px;
+    color: $thr_color;
+    margin-bottom: 5px;
+    span {
+      color: red;
+    }
+  }
+  input,
+  select {
+    height: 37px;
+    padding: 0 15px;
+    border: 1px solid #e1e1e1;
+    transition: all 0.3s ease;
+    &:focus {
+      outline: $primary_color;
+      border: 1px solid $primary_color;
+    }
+  }
+}

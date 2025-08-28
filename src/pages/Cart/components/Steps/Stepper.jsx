@@ -1,10 +1,13 @@
+import { useContext } from 'react';
 import styles from '../../style.module.scss';
 import cls from 'classnames';
+import { StepperContext } from '../../../../contexts/StepperProvider';
 function Stepper({ number, content, isDisable }) {
   const { stepper, numberStep, textStep, isDisableNumber, isDisableText } =
     styles;
+  const { setCurrentStep } = useContext(StepperContext);
   return (
-    <div className={stepper}>
+    <div className={stepper} onClick={() => setCurrentStep(number)}>
       <div
         className={cls(numberStep, {
           [isDisableNumber]: isDisable

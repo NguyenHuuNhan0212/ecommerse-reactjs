@@ -1,0 +1,37 @@
+@use '@styles/mixin.module.scss' as *;
+@use '@styles/variable.module.scss' as *;
+.container {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+
+  .leftBody {
+    flex-grow: 1;
+    .raw {
+      margin-bottom: 20px;
+    }
+    .raw2Column {
+      display: flex;
+      gap: 20px;
+    }
+    .title {
+      font-size: 14px;
+      color: $primary_color;
+      text-transform: uppercase;
+    }
+    .coupon {
+      font-size: 14px;
+      color: $four_color;
+      span {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+  .rightBody {
+    max-width: 500px;
+    width: 100%;
+    background-color: black;
+    height: 500px;
+  }
+}

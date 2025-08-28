@@ -1,23 +1,25 @@
 import MyHeader from '@components/Header/Header';
 import MyFooter from '@components/Footer/Footer';
 import Steps from './components/Steps/Steps';
-import Contents from './components/Contents/Contents';
 import styles from './style.module.scss';
 import MainLayout from '../../Components/Layout/Layout';
+import { StepperProvider } from '../../contexts/StepperProvider';
+import ContentStep from './components/ContentStep';
 function Cart() {
   const { container } = styles;
+
   return (
-    <div>
+    <StepperProvider>
       <MyHeader />
       <div className={container}>
         <Steps />
         <MainLayout>
-          <Contents />
+          <ContentStep />
         </MainLayout>
       </div>
 
       <MyFooter />
-    </div>
+    </StepperProvider>
   );
 }
 

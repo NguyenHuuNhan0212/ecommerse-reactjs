@@ -20,6 +20,10 @@ const routes = [
   {
     path: '/product/:id',
     component: lazy(() => import('@pages/DetailProduct/DetailProduct.jsx'))
+  },
+  {
+    path: '/about-us',
+    component: lazy(() => import('@pages/AboutUs'))
   }
 ];
 
