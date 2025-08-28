@@ -6,25 +6,26 @@ import { FaRegHeart } from 'react-icons/fa';
 import { TfiReload } from 'react-icons/tfi';
 import PaymentMethod from '../../Components/PaymentMethod/PaymentMethod';
 import AccordionMenu from '../../Components/AccordionMenu';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import InformationProduct from './components/Infomation';
 import ReviewProduct from './components/Review';
 import MyFooter from '../../Components/Footer/Footer';
 import SliderCommon from '../../Components/SliderCommon/SliderCommon';
 import InnerImageZoom from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/styles.min.css';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import cls from 'classnames';
-const tempDataSize = [
-  {
-    name: 'L',
-    amount: '1000'
-  },
-  {
-    name: 'M',
-    amount: '1000'
-  }
-];
+import Cookies from 'js-cookie';
+import {
+  getDetailProduct,
+  getRelatedProducts
+} from '../../apis/productsService';
+import LoadingTextCommon from '../../Components/LoadingTextCommon/LoadingTextCommon';
+import { toast } from 'react-toastify';
+import { handleAddProductToCartCommon } from '../../utils/helper';
+import { SideBarContext } from '../../contexts/SideBarProvider';
+import { ToastContext } from '../../contexts/ToastProvider';
+import { addProductToCart } from '../../apis/cartService';
 function DetailProduct() {
   const {
     container,
@@ -46,13 +47,23 @@ function DetailProduct() {
     imageReview,
     active,
     clear,
-    activeDisableBtn
+    activeDisableBtn,
+    loading,
+    emptyData
   } = styles;
+  const { setIsOpen, setType, handleGetListProductsCart } =
+    useContext(SideBarContext);
+  const { toast } = useContext(ToastContext);
+  const userId = Cookies.get('userId');
 
   const [menuSelected, setMenuSelected] = useState(1);
   const [quantity, setQuantity] = useState(1);
   const [sizeSelected, setSizeSelected] = useState('');
+  const [data, setData] = useState('');
+  const [relatedData, setRelatedData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const params = useParams();
   const dataAccordionMenu = [
     {
       id: 1,
@@ -65,56 +76,9 @@ function DetailProduct() {
       content: <ReviewProduct />
     }
   ];
-  const dataImageDetails = [
-    'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-17.2-min.jpg',
-    'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-17.2-min.jpg',
-    'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-16.2-min.jpg',
-    'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-17.2-min.jpg'
-  ];
-  const dataSlider = [
-    {
-      image:
-        'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-17.2-min.jpg',
-      name: 'product 1',
-      price: 12341,
-      size: [{ name: 'S' }, { name: 'M' }]
-    },
-    {
-      image:
-        'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-17.2-min.jpg',
-      name: 'product 1',
-      price: 12341,
-      size: [{ name: 'S' }, { name: 'M' }]
-    },
-    {
-      image:
-        'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-17.2-min.jpg',
-      name: 'product 1',
-      price: 12341,
-      size: [{ name: 'S' }, { name: 'M' }]
-    },
-    {
-      image:
-        'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-17.2-min.jpg',
-      name: 'product 1',
-      price: 12341,
-      size: [{ name: 'S' }, { name: 'M' }]
-    },
-    {
-      image:
-        'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-17.2-min.jpg',
-      name: 'product 1',
-      price: 12341,
-      size: [{ name: 'S' }, { name: 'M' }]
-    },
-    {
-      image:
-        'https://xstore.b-cdn.net/elementor2/marseille04/wp-content/uploads/sites/2/2022/12/Image-17.2-min.jpg',
-      name: 'product 1',
-      price: 12341,
-      size: [{ name: 'S' }, { name: 'M' }]
-    }
-  ];
+  const [isLoadingBtn, setIsLoadingBtn] = useState(false);
+  const [isLoadingBtnBuyNow, setIsLoadingBtnBuyNow] = useState(false);
+
   const handleRenderZoomImage = (src) => {
     return (
       <InnerImageZoom
@@ -144,6 +108,76 @@ function DetailProduct() {
       type === 'increment' ? (prev += 1) : prev === 1 ? 1 : (prev -= 1)
     );
   };
+  const fetchDataDetail = async (id) => {
+    setIsLoading(true);
+    try {
+      const data = await getDetailProduct(id);
+      setData(data);
+      setIsLoading(false);
+    } catch (err) {
+      toast.error('Có lỗi khi tải dữ liệu.');
+      setData('');
+      setIsLoading(false);
+    }
+  };
+
+  const fetchDataRelatedProduct = async (id) => {
+    setIsLoading(true);
+    try {
+      const data = await getRelatedProducts(id);
+      setRelatedData(data);
+      setIsLoading(false);
+    } catch (err) {
+      toast.error('Có lỗi khi tải dữ liệu.');
+      setRelatedData([]);
+      setIsLoading(false);
+    }
+  };
+  const handleGoToShop = () => {
+    navigate('/shop');
+  };
+
+  const handleAddToCart = () => {
+    handleAddProductToCartCommon(
+      userId,
+      setIsOpen,
+      setType,
+      toast,
+      sizeSelected,
+      params.id,
+      quantity,
+      setIsLoadingBtn,
+      handleGetListProductsCart
+    );
+  };
+
+  const handleBuyNow = () => {
+    const data = {
+      userId,
+      productId: params.id,
+      quantity,
+      size: sizeSelected
+    };
+    setIsLoadingBtnBuyNow(true);
+
+    addProductToCart(data)
+      .then((res) => {
+        navigate('/cart');
+        setIsLoadingBtnBuyNow(false);
+        toast.success('Add product to cart successfully!');
+      })
+      .catch((err) => {
+        toast.error('Add product to cart failed!');
+        setIsLoadingBtnBuyNow(false);
+      });
+  };
+  useEffect(() => {
+    if (params.id) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      fetchDataDetail(params.id);
+      fetchDataRelatedProduct(params.id);
+    }
+  }, [params]);
   return (
     <div>
       <MyHeader />
@@ -156,107 +190,139 @@ function DetailProduct() {
             </div>
           </div>
 
-          <div className={contentSection}>
-            <div className={imageBox}>
-              {dataImageDetails.map((src) => handleRenderZoomImage(src))}
+          {isLoading ? (
+            <div className={loading}>
+              <LoadingTextCommon />{' '}
             </div>
+          ) : (
+            <>
+              {!data ? (
+                <div className={emptyData}>
+                  <p>No Result</p>
 
-            <div className={infoBox}>
-              <h1>Title Product</h1>
-              <p className={price}>$1,879.99</p>
-              <p className={des}>Moo ta</p>
+                  <Button
+                    content={'BACK TO OUR SHOP'}
+                    onClick={() => {
+                      handleGoToShop();
+                    }}
+                  />
+                </div>
+              ) : (
+                <div className={contentSection}>
+                  <div className={imageBox}>
+                    {data?.images?.map((src) => handleRenderZoomImage(src))}
+                  </div>
 
-              <p className={titleSize}>Size {sizeSelected}</p>
-              <div className={boxSize}>
-                {tempDataSize.map((item, index) => {
-                  return (
-                    <div
-                      className={cls(size, {
-                        [active]: sizeSelected === item.name
+                  <div className={infoBox}>
+                    <h1>{data?.name}</h1>
+                    <p className={price}>${data?.price}</p>
+                    <p className={des}>{data?.description}</p>
+
+                    <p className={titleSize}>Size {sizeSelected}</p>
+                    <div className={boxSize}>
+                      {data?.size?.map((item, index) => {
+                        return (
+                          <div
+                            className={cls(size, {
+                              [active]: sizeSelected === item.name
+                            })}
+                            key={index}
+                            onClick={() => handleSelectedSize(item.name)}
+                          >
+                            {item.name}
+                          </div>
+                        );
                       })}
-                      key={index}
-                      onClick={() => handleSelectedSize(item.name)}
-                    >
-                      {item.name}
                     </div>
-                  );
-                })}
-              </div>
-              {sizeSelected && (
-                <div className={clear} onClick={() => handleClearSize()}>
-                  clear
+                    {sizeSelected && (
+                      <div className={clear} onClick={() => handleClearSize()}>
+                        clear
+                      </div>
+                    )}
+
+                    <div className={functionInfo}>
+                      <div className={incrementAmount}>
+                        <div onClick={() => handleSetQuantity('decrement')}>
+                          -
+                        </div>
+                        <div>{quantity}</div>
+                        <div onClick={() => handleSetQuantity('increment')}>
+                          +
+                        </div>
+                      </div>
+                      <div className={boxBtn}>
+                        <Button
+                          onClick={() => handleAddToCart()}
+                          content={
+                            isLoadingBtn ? <LoadingTextCommon /> : 'ADD TO CART'
+                          }
+                          customClassName={!sizeSelected && activeDisableBtn}
+                        />
+                      </div>
+                    </div>
+
+                    <div className={orSection}>
+                      <div></div>
+                      <span>OR</span>
+                      <div></div>
+                    </div>
+
+                    <div>
+                      <Button
+                        onClick={() => handleBuyNow()}
+                        content={
+                          isLoadingBtnBuyNow ? <LoadingTextCommon /> : 'BUY NOW'
+                        }
+                        customClassName={!sizeSelected && activeDisableBtn}
+                      />
+                    </div>
+
+                    <div className={addFunction}>
+                      <div>
+                        <FaRegHeart />
+                      </div>
+                      <div>
+                        <TfiReload />
+                      </div>
+                    </div>
+
+                    <div>
+                      <PaymentMethod />
+                    </div>
+
+                    <div className={info}>
+                      <div>
+                        Brand: <span>Brand 03</span>
+                      </div>
+                      <div>
+                        SKU: <span>87654</span>
+                      </div>
+                      <div>
+                        Category: <span>Men</span>
+                      </div>
+                    </div>
+                    {dataAccordionMenu.map((item, index) => {
+                      return (
+                        <AccordionMenu
+                          key={index}
+                          titleMenu={item.titleMenu}
+                          contentJsx={item.content}
+                          onClick={() => handleSetMenuSelected(item.id)}
+                          isSelected={menuSelected === item.id}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
               )}
-
-              <div className={functionInfo}>
-                <div className={incrementAmount}>
-                  <div onClick={() => handleSetQuantity('decrement')}>-</div>
-                  <div>{quantity}</div>
-                  <div onClick={() => handleSetQuantity('increment')}>+</div>
-                </div>
-                <div className={boxBtn}>
-                  <Button
-                    content={'ADD TO CART'}
-                    customClassName={!sizeSelected && activeDisableBtn}
-                  />
-                </div>
-              </div>
-
-              <div className={orSection}>
-                <div></div>
-                <span>OR</span>
-                <div></div>
-              </div>
-
-              <div>
-                <Button
-                  content={'BUY NOW'}
-                  customClassName={!sizeSelected && activeDisableBtn}
-                />
-              </div>
-
-              <div className={addFunction}>
-                <div>
-                  <FaRegHeart />
-                </div>
-                <div>
-                  <TfiReload />
-                </div>
-              </div>
-
-              <div>
-                <PaymentMethod />
-              </div>
-
-              <div className={info}>
-                <div>
-                  Brand: <span>Brand 03</span>
-                </div>
-                <div>
-                  SKU: <span>87654</span>
-                </div>
-                <div>
-                  Category: <span>Men</span>
-                </div>
-              </div>
-              {dataAccordionMenu.map((item, index) => {
-                return (
-                  <AccordionMenu
-                    key={index}
-                    titleMenu={item.titleMenu}
-                    contentJsx={item.content}
-                    onClick={() => handleSetMenuSelected(item.id)}
-                    isSelected={menuSelected === item.id}
-                  />
-                );
-              })}
+            </>
+          )}
+          {relatedData.length > 0 && (
+            <div>
+              <h2>Related Products</h2>
+              <SliderCommon data={relatedData} isProductItem showItem={4} />
             </div>
-          </div>
-
-          <div>
-            <h2>Related Products</h2>
-            <SliderCommon data={dataSlider} isProductItem showItem={4} />
-          </div>
+          )}
         </MainLayout>
       </div>
       <MyFooter />

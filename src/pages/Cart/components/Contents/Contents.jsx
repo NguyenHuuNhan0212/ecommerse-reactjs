@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import Button from '../../../../Components/Button/Button';
 import styles from '../../style.module.scss';
 import CartSummary from './CartSummary';
@@ -8,7 +8,8 @@ import { IoCartOutline } from 'react-icons/io5';
 import {
   addProductToCart,
   deleteCart,
-  deleteItem
+  deleteItem,
+  getCart
 } from '../../../../apis/cartService';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,7 +28,8 @@ function Contents() {
     handleGetListProductsCart,
     isLoading,
     setIsLoading,
-    userId
+    userId,
+    setListProductCart
   } = useContext(SideBarContext);
   const navigate = useNavigate();
   const handleReplaceQuantity = (data) => {
@@ -63,6 +65,19 @@ function Contents() {
   const handleNavigateToShop = () => {
     navigate('/shop');
   };
+  useEffect(() => {
+    if (userId) {
+      getCart(userId)
+        .then((res) => {
+          setListProductCart(res.data.data);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          setListProductCart([]);
+          setIsLoading(false);
+        });
+    }
+  }, []);
   return (
     <>
       {listProductCart.length > 0 && userId ? (

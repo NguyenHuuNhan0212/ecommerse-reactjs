@@ -8,4 +8,14 @@ const getProduct = async (query) => {
   );
   return res.data;
 };
-export { getProduct };
+
+const getDetailProduct = async (id) => {
+  const res = await axiosClient.get(`/product/${id}`);
+  return res.data;
+};
+
+const getRelatedProducts = async (id) => {
+  const res = await axiosClient.get(`/related-products/${id}`);
+  return res.data.relatedProducts;
+};
+export { getProduct, getDetailProduct, getRelatedProducts };

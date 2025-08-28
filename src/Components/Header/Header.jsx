@@ -11,6 +11,7 @@ import { useContext, useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { SideBarContext } from '../../contexts/SideBarProvider';
 import { useNavigate } from 'react-router-dom';
+import { StoreContext } from '../../contexts/storeProvider';
 function MyHeader() {
   const {
     container,
@@ -23,9 +24,17 @@ function MyHeader() {
     boxCart,
     quantity
   } = styles;
-  const { scrollPosition, scrollDirection } = useScrollHandling();
+  const { scrollPosition } = useScrollHandling();
   const [fixedPosition, setFixedPosition] = useState(false);
-  const { setIsOpen, setType, listProductCart } = useContext(SideBarContext);
+
+  const {
+    setIsOpen,
+    setType,
+    listProductCart,
+    userId,
+    handleGetListProductsCart
+  } = useContext(SideBarContext);
+  const { userInfo } = useContext(StoreContext);
   const navigate = useNavigate();
   const handleOpenSideBar = (type) => {
     setType(type);
@@ -34,6 +43,18 @@ function MyHeader() {
   const handleHomePage = () => {
     navigate('/');
   };
+
+  const handleOpenCart = () => {
+    handleGetListProductsCart(userId, 'cart');
+    handleOpenSideBar('cart');
+  };
+
+  const totalItemCart = listProductCart.length
+    ? listProductCart.reduce((acc, item) => {
+        return (acc += item.quantity);
+      }, 0)
+    : 0;
+
   useEffect(() => {
     setFixedPosition(scrollPosition > 80);
   }, [scrollPosition]);
@@ -97,9 +118,11 @@ function MyHeader() {
                 style={{
                   fontSize: '20px'
                 }}
-                onClick={() => handleOpenSideBar('cart')}
+                onClick={() => handleOpenCart()}
               />
-              <div className={quantity}>{listProductCart.length}</div>
+              <div className={quantity}>
+                {totalItemCart || userInfo?.amountCart || 0}
+              </div>
             </div>
           </div>
         </div>

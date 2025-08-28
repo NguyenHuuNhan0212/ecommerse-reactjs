@@ -24,8 +24,8 @@ function SliderCommon({ data, isProductItem = false, showItem = 1 }) {
           <>
             {isProductItem ? (
               <ProductItem
-                src={item.image}
-                prevSrc={item.image}
+                src={item.images[0]}
+                prevSrc={item.images[1]}
                 name={item.name}
                 price={item.price}
                 details={item}
