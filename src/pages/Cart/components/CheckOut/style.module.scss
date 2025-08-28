@@ -31,7 +31,58 @@
   .rightBody {
     max-width: 500px;
     width: 100%;
-    background-color: black;
-    height: 500px;
+    height: 600px;
+    border: 2px solid $primary_color;
+    padding: 15px 20px;
+    .items {
+      height: 90px;
+      overflow: scroll;
+      overflow-x: hidden;
+      overflow-y: auto;
+      border-bottom: 1px solid #ccc;
+      border-top: 1px solid #ccc;
+      padding: 30px 0;
+      .item {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin-bottom: 10px;
+        img {
+          width: 70px;
+          height: 80px;
+        }
+        p {
+          margin: 0 0 10px 0;
+          color: $thr_color;
+        }
+      }
+    }
+    .title {
+      color: $primary_color;
+
+      margin-bottom: 8px;
+    }
+    .subTotal {
+      display: flex;
+      justify-content: space-between;
+      color: #8888;
+      p:nth-child(2) {
+        font-size: 14px;
+      }
+    }
+    .total {
+      display: flex;
+      justify-content: space-between;
+      color: #222;
+      font-size: 20px;
+    }
+    .payment {
+      border-top: 1px solid #e1e1e1;
+      padding-top: 25px;
+      margin-bottom: 10px;
+      label {
+        color: #222;
+      }
+    }
   }
 }

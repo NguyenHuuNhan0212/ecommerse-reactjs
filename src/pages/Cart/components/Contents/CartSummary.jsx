@@ -5,6 +5,9 @@ import cls from 'classnames';
 import { SideBarContext } from '../../../../contexts/SideBarProvider';
 import LoadingCart from '../Loading';
 import PaymentMethod from '../../../../Components/PaymentMethod/PaymentMethod';
+import { StepperContext } from '../../../../contexts/StepperProvider';
+import { handleTotalPrice } from '../../../../utils/helper';
+import { useNavigate } from 'react-router-dom';
 function CartSummary() {
   const {
     containerSummary,
@@ -17,11 +20,17 @@ function CartSummary() {
     containerRight,
     textSecure
   } = styles;
+  const { setCurrentStep } = useContext(StepperContext);
   const { listProductCart, isLoading } = useContext(SideBarContext);
+  const navigate = useNavigate();
 
-  const total = listProductCart.reduce((acc, item) => {
-    return acc + item.total;
-  }, 0);
+  const handleProcessToCheckOut = () => {
+    setCurrentStep(2);
+  };
+  const handleGoToShop = () => {
+    navigate('/shop');
+  };
+
   return (
     <>
       <div className={containerRight}>
@@ -29,16 +38,25 @@ function CartSummary() {
           <div className={title}>CART TOTALS</div>
           <div className={cls(boxTotal, subTotal)}>
             <div>Subtotal</div>
-            <div className={price}>${total.toFixed(2)}</div>
+            <div className={price}>
+              ${handleTotalPrice(listProductCart).toFixed(2)}
+            </div>
           </div>
           <div className={cls(boxTotal, totals)}>
             <div>TOTAL</div>
-            <div>${total.toFixed(2)}</div>
+            <div>${handleTotalPrice(listProductCart).toFixed(2)}</div>
           </div>
 
-          <Button content={'PROCEED TO CHECKOUT'} />
+          <Button
+            content={'PROCEED TO CHECKOUT'}
+            onClick={() => handleProcessToCheckOut()}
+          />
           <div className={space}></div>
-          <Button content={'CONTINUE SHOPPING'} isPrimary={false} />
+          <Button
+            content={'CONTINUE SHOPPING'}
+            isPrimary={false}
+            onClick={() => handleGoToShop()}
+          />
           {isLoading && <LoadingCart />}
         </div>
         <PaymentMethod />

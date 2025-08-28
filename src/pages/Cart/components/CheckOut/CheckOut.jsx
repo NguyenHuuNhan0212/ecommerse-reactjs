@@ -4,6 +4,7 @@ import styles from './style.module.scss';
 import cls from 'classnames';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import RightBody from './RightBody';
 
 const ON_BASE = 'https://countriesnow.space/api/v0.1';
 function CheckOut() {
@@ -212,12 +213,10 @@ function CheckOut() {
               })}
             />
           </div>
-
-          <button type='submit'>submit</button>
         </form>
       </div>
 
-      <div className={rightBody}></div>
+      <RightBody />
     </div>
   );
 }

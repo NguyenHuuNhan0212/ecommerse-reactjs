@@ -1,6 +1,8 @@
 @use '@styles/mixin.module.scss' as *;
 @use '@styles/variable.module.scss' as *;
 .container {
+  height: 100vh;
+  overflow: scroll;
   padding: 10px;
   .title {
     font-size: 24px;
