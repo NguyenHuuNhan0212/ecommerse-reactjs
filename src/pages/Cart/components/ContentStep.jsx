@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { StepperContext } from '../../../contexts/StepperProvider';
 import Contents from './Contents/Contents';
 import CheckOut from './CheckOut/CheckOut';
+import QrPayment from './QrPayment';
 
 function ContentStep() {
   const { currentStep } = useContext(StepperContext);
@@ -12,7 +13,7 @@ function ContentStep() {
       case 2:
         return <CheckOut />;
       case 3:
-        return <h1>Step Three</h1>;
+        return <QrPayment />;
     }
   };
   return <>{handleRenderContent()}</>;

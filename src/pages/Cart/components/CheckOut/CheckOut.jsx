@@ -2,9 +2,12 @@ import InputCustom from '../../../../Components/InputCommon2/input';
 import { useForm } from 'react-hook-form';
 import styles from './style.module.scss';
 import cls from 'classnames';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import RightBody from './RightBody';
+import { createOrder } from '../../../../apis/orderService';
+import { useNavigate } from 'react-router-dom';
+import { StepperContext } from '../../../../contexts/StepperProvider';
 
 const ON_BASE = 'https://countriesnow.space/api/v0.1';
 function CheckOut() {
@@ -18,12 +21,34 @@ function CheckOut() {
     { value: '2', label: 'Option 2' },
     { value: '3', label: 'Option 3' }
   ];
+  const navigate = useNavigate();
+  const { setCurrentStep } = useContext(StepperContext);
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors }
   } = useForm();
+
+  const formRef = useRef();
+  console.log(errors);
+
+  const handleExternalSubmit = () => {
+    formRef.current.requestSubmit();
+  };
+
+  const onSubmit = async (data) => {
+    try {
+      const res = await createOrder(data);
+      navigate(
+        `/cart?id=${res.data.data._id}&totalAmount=${res.data.data.totalAmount}`
+      );
+      setCurrentStep(3);
+      console.log(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     axios.get(`${ON_BASE}/countries/iso`).then((res) => {
       setCountries(
@@ -88,7 +113,7 @@ function CheckOut() {
         </p>
         <p className={title}>Billing details</p>
 
-        <form onSubmit={handleSubmit((data) => console.log(data))}>
+        <form ref={formRef} onSubmit={handleSubmit(onSubmit)}>
           <div className={cls(raw, raw2Column)}>
             <InputCustom
               label={'First name'}
@@ -96,9 +121,18 @@ function CheckOut() {
               type={'text'}
               placeholder='Enter your first name'
               register={register('firstName', {
-                required: true,
-                maxLength: 25
+                required: 'First name is required',
+                maxLength: {
+                  value: 25,
+                  message: 'First name must be at most 25 characters'
+                },
+                pattern: {
+                  value: /^[A-Za-z\s]+$/,
+                  message: 'First name must contain only letters'
+                }
               })}
+              isError={errors.firstName}
+              errorMessage={errors.firstName?.message}
             />
             <InputCustom
               label={'Last name'}
@@ -106,9 +140,18 @@ function CheckOut() {
               type={'text'}
               placeholder='Enter your last name'
               register={register('lastName', {
-                required: true,
-                maxLength: 25
+                required: 'Last name is required',
+                maxLength: {
+                  value: 25,
+                  message: 'Last name must be at most 25 characters'
+                },
+                pattern: {
+                  value: /^[A-Za-z\s]+$/,
+                  message: 'Last name must contain only letters'
+                }
               })}
+              isError={errors.lastName}
+              errorMessage={errors.lastName?.message}
             />
           </div>
 
@@ -117,7 +160,14 @@ function CheckOut() {
               label={'Company name (Optional)'}
               type={'text'}
               placeholder='Enter your company name'
-              register={register('companyName', {})}
+              register={register('companyName', {
+                maxLength: {
+                  value: 50,
+                  message: 'Company name must be at most 50 characters'
+                }
+              })}
+              isError={errors.companyName}
+              errorMessage={errors.companyName?.message}
             />
           </div>
 
@@ -128,8 +178,10 @@ function CheckOut() {
               dataOptions={countries}
               placeholder='Select your country or region'
               register={register('country', {
-                required: true
+                required: 'Country is required'
               })}
+              isError={errors.country}
+              errorMessage={errors.country?.message}
             />
           </div>
 
@@ -140,8 +192,14 @@ function CheckOut() {
               type={'text'}
               placeholder='Enter your street address'
               register={register('street', {
-                required: true
+                required: 'Street address is required',
+                minLength: {
+                  value: 5,
+                  message: 'Street address must be at least 5 characters'
+                }
               })}
+              isError={errors.street}
+              errorMessage={errors.street?.message}
             />
           </div>
 
@@ -151,7 +209,14 @@ function CheckOut() {
               type={'text'}
               isShowLabel={false}
               placeholder='Apartment, suite, unit, etc. (optional)'
-              register={register('apartment', {})}
+              register={register('apartment', {
+                maxLength: {
+                  value: 30,
+                  message: 'Apartment info must be at most 30 characters'
+                }
+              })}
+              isError={errors.apartment}
+              errorMessage={errors.apartment?.message}
             />
           </div>
           <div className={raw}>
@@ -161,8 +226,10 @@ function CheckOut() {
               dataOptions={cities}
               placeholder='Enter your town or city'
               register={register('cities', {
-                required: true
+                required: 'City is required'
               })}
+              isError={errors.cities}
+              errorMessage={errors.cities?.message}
             />
           </div>
 
@@ -172,9 +239,11 @@ function CheckOut() {
               isRequired
               dataOptions={states}
               placeholder='Select your state'
-              register={register('states', {
-                required: true
+              register={register('state', {
+                required: 'State is required'
               })}
+              isError={errors.states}
+              errorMessage={errors.states?.message}
             />
           </div>
 
@@ -185,20 +254,30 @@ function CheckOut() {
               type={'text'}
               placeholder='Enter your phone number'
               register={register('phone', {
-                required: true
+                required: 'Phone number is required',
+                pattern: {
+                  value: /^[0-9]{9,12}$/,
+                  message: 'Phone number must be 9-12 digits'
+                }
               })}
+              isError={errors.phone}
+              errorMessage={errors.phone?.message}
             />
           </div>
 
           <div className={raw}>
             <InputCustom
               label={'ZIP code'}
-              isRequired
               type={'text'}
               placeholder='Enter your ZIP code'
               register={register('zipCode', {
-                required: true
+                pattern: {
+                  value: /^[A-Za-z0-9\- ]{3,10}$/,
+                  message: 'ZIP code is invalid'
+                }
               })}
+              isError={errors.zipCode}
+              errorMessage={errors.zipCode?.message}
             />
           </div>
 
@@ -209,14 +288,20 @@ function CheckOut() {
               type={'text'}
               placeholder='Enter your email address'
               register={register('email', {
-                required: true
+                required: 'Email is required',
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: 'Email is invalid'
+                }
               })}
+              isError={errors.email}
+              errorMessage={errors.email?.message}
             />
           </div>
         </form>
       </div>
 
-      <RightBody />
+      <RightBody handleExternalSubmit={handleExternalSubmit} />
     </div>
   );
 }

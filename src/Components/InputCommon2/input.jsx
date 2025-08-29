@@ -6,15 +6,24 @@ function InputCustom({
   placeholder,
   dataOptions,
   isRequired = false,
-  isShowLabel = true
+  isShowLabel = true,
+  isError = false,
+  errorMessage = ''
 }) {
-  const { container, labelClass } = styles;
+  const { container, labelClass, error, errorMessageCls } = styles;
   const renderInput = () => {
     if (type == 'text') {
-      return <input type='text' placeholder={placeholder} {...register} />;
+      return (
+        <input
+          type='text'
+          className={isError ? error : ''}
+          placeholder={placeholder}
+          {...register}
+        />
+      );
     } else {
       return (
-        <select {...register} defaultValue=''>
+        <select {...register} defaultValue='' className={isError ? error : ''}>
           <option value='' disabled hidden>
             {placeholder}
           </option>
@@ -38,6 +47,7 @@ function InputCustom({
       )}
 
       {renderInput()}
+      {isError && <p className={errorMessageCls}>{errorMessage}</p>}
     </div>
   );
 }

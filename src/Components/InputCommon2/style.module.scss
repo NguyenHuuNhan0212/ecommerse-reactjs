@@ -13,12 +13,21 @@
       color: red;
     }
   }
+  .error {
+    border-color: red !important;
+  }
+  .errorMessageCls {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+  }
   input,
   select {
     height: 37px;
     padding: 0 15px;
     border: 1px solid #e1e1e1;
     transition: all 0.3s ease;
+
     &:focus {
       outline: $primary_color;
       border: 1px solid $primary_color;

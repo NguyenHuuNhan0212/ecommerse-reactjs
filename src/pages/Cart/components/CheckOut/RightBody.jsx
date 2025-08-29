@@ -4,10 +4,9 @@ import { SideBarContext } from '../../../../contexts/SideBarProvider';
 import Button from '../../../../Components/Button/Button';
 import PaymentMethod from '../../../../Components/PaymentMethod/PaymentMethod';
 import { handleTotalPrice } from '../../../../utils/helper';
-function RightBody() {
+function RightBody({ handleExternalSubmit }) {
   const { rightBody, title, payment, items, total, item, subTotal } = styles;
   const { listProductCart } = useContext(SideBarContext);
-  console.log(listProductCart);
   return (
     <div className={rightBody}>
       <p className={title}>YOUR ORDER</p>
@@ -47,6 +46,7 @@ function RightBody() {
         style={{
           marginTop: '30px'
         }}
+        onClick={handleExternalSubmit}
       />
       <PaymentMethod />
     </div>
