@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './style.module.scss';
 import cls from 'classnames';
+import { getDetailOrder } from '../../../../apis/orderService';
 function QrPayment() {
   const {
     container,
@@ -13,12 +14,38 @@ function QrPayment() {
     flex,
     paymentMethod
   } = styles;
-  const [status, setStatus] = useState('Chờ xác nhận');
+  const [isSuccess, setIsSuccess] = useState(false);
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id');
+
   const totalAmount = params.get('totalAmount');
 
   const qrCodeUrl = `https://qr.sepay.vn/img?acc=VQRQADZTQ0798&bank=MBBank&amount=${totalAmount}&des=${id}`;
+
+  let interval;
+
+  const handleGetDetailOrder = async () => {
+    if (!id) return;
+    try {
+      const res = await getDetailOrder(id);
+      if (res.data.data.status !== 'pending') {
+        clearInterval(interval);
+      }
+      if (res.data.data.status === 'success') {
+        setIsSuccess(true);
+      }
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    interval = setInterval(() => {
+      handleGetDetailOrder();
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className={container}>
       <div className={left}>
@@ -77,7 +104,7 @@ function QrPayment() {
         </div>
         <div className={statusCls}>
           <div>Trạng thái đơn hàng:</div>
-          <div>{status}</div>
+          <div> {isSuccess ? 'success' : 'pending'} </div>
         </div>
       </div>
     </div>

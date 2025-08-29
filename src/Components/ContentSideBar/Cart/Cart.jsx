@@ -8,6 +8,8 @@ import { SideBarContext } from '@contexts/SideBarProvider';
 import LoadingTextCommon from '../../LoadingTextCommon/LoadingTextCommon';
 import classNames from 'classnames';
 import { useNavigate } from 'react-router-dom';
+import { StepperContext } from '@contexts/StepperProvider';
+import { set } from 'react-hook-form';
 function Cart() {
   const {
     container,
@@ -19,7 +21,10 @@ function Cart() {
     boxBtnEmpty
   } = styles;
   const { listProductCart, isLoading, setIsOpen } = useContext(SideBarContext);
+  const { setCurrentStep } = useContext(StepperContext);
+  console.log(setCurrentStep);
   const navigate = useNavigate();
+
   const handleNavigateToShop = () => {
     navigate('/shop');
     setIsOpen(false);
@@ -31,6 +36,11 @@ function Cart() {
   const subTotal = listProductCart.reduce((acc, item) => {
     return acc + item.total;
   }, 0);
+  const handleGoToCheckout = () => {
+    setCurrentStep(2);
+    navigate('/cart');
+    setIsOpen(false);
+  };
   return (
     <div
       className={classNames(container, {
@@ -83,7 +93,11 @@ function Cart() {
             </div>
             <div className={boxBtn}>
               <Button content={'VIEW CART'} onClick={handleNavigateToCart} />
-              <Button content={'CHECKOUT'} isPrimary={false} />
+              <Button
+                content={'CHECKOUT'}
+                isPrimary={false}
+                onClick={handleGoToCheckout}
+              />
             </div>
           </div>
         </div>

@@ -8,6 +8,8 @@ import RightBody from './RightBody';
 import { createOrder } from '../../../../apis/orderService';
 import { useNavigate } from 'react-router-dom';
 import { StepperContext } from '../../../../contexts/StepperProvider';
+import { deleteCart } from '../../../../apis/cartService';
+import { SideBarContext } from '../../../../contexts/SideBarProvider';
 
 const ON_BASE = 'https://countriesnow.space/api/v0.1';
 function CheckOut() {
@@ -16,11 +18,8 @@ function CheckOut() {
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
   const [states, setStates] = useState([]);
-  const dataOptions = [
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' }
-  ];
+  const [isLoading, setIsLoading] = useState(false);
+  const { setListProductCart } = useContext(SideBarContext);
   const navigate = useNavigate();
   const { setCurrentStep } = useContext(StepperContext);
   const {
@@ -38,15 +37,22 @@ function CheckOut() {
   };
 
   const onSubmit = async (data) => {
+    setIsLoading(true);
     try {
       const res = await createOrder(data);
+
+      await deleteCart({ userId: res.data.data.userId });
+      setListProductCart([]);
       navigate(
         `/cart?id=${res.data.data._id}&totalAmount=${res.data.data.totalAmount}`
       );
+
       setCurrentStep(3);
       console.log(res.data.data);
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
   };
   useEffect(() => {
@@ -301,7 +307,10 @@ function CheckOut() {
         </form>
       </div>
 
-      <RightBody handleExternalSubmit={handleExternalSubmit} />
+      <RightBody
+        handleExternalSubmit={handleExternalSubmit}
+        isLoading={isLoading}
+      />
     </div>
   );
 }

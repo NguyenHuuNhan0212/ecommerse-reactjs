@@ -5,30 +5,33 @@ import { SideBarProvider } from './contexts/SideBarProvider';
 import SideBar from './Components/SideBar/SideBar';
 import { ToastProvider } from './contexts/ToastProvider';
 import { StoreProvider } from './contexts/storeProvider';
+import { StepperProvider } from './contexts/StepperProvider';
 function App() {
   return (
-    <StoreProvider>
-      <ToastProvider>
-        <SideBarProvider>
-          <BrowserRouter>
-            <SideBar />
-            <Suspense fallback={<div>Loading...</div>}>
-              <Routes>
-                {routers.map((item, index) => {
-                  return (
-                    <Route
-                      path={item.path}
-                      element={<item.component />}
-                      key={index}
-                    />
-                  );
-                })}
-              </Routes>
-            </Suspense>
-          </BrowserRouter>
-        </SideBarProvider>
-      </ToastProvider>
-    </StoreProvider>
+    <StepperProvider>
+      <StoreProvider>
+        <ToastProvider>
+          <SideBarProvider>
+            <BrowserRouter>
+              <SideBar />
+              <Suspense fallback={<div>Loading...</div>}>
+                <Routes>
+                  {routers.map((item, index) => {
+                    return (
+                      <Route
+                        path={item.path}
+                        element={<item.component />}
+                        key={index}
+                      />
+                    );
+                  })}
+                </Routes>
+              </Suspense>
+            </BrowserRouter>
+          </SideBarProvider>
+        </ToastProvider>
+      </StoreProvider>
+    </StepperProvider>
   );
 }
 

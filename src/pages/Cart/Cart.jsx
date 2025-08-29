@@ -9,7 +9,8 @@ function Cart() {
   const { container } = styles;
 
   return (
-    <StepperProvider>
+    //<StepperProvider>
+    <>
       <MyHeader />
       <div className={container}>
         <Steps />
@@ -19,7 +20,8 @@ function Cart() {
       </div>
 
       <MyFooter />
-    </StepperProvider>
+    </>
+    //</StepperProvider>
   );
 }
 
